@@ -88,7 +88,7 @@ public abstract class BadRabbit extends JavaPlugin
 		setEnabled(false);
 	}
 
-	private static Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
+	protected static Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
 	{
 		Field field = clazz.getDeclaredField(name);
 		field.setAccessible(true);
