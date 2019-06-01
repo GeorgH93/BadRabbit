@@ -95,5 +95,5 @@ public abstract class BadRabbit extends JavaPlugin
 		return field;
 	}
 
-	protected abstract @NotNull JavaPlugin createInstance();
+	protected abstract @NotNull JavaPlugin createInstance() throws Exception;
 }
