@@ -76,7 +76,7 @@ public abstract class BadRabbit extends JavaPlugin
 		}
 		catch(Exception e)
 		{
-			getLogger().warning("[BadRabbit] Failed to switch to real plugin!");
+			getLogger().warning("[BadRabbit] Failed switching to real plugin!");
 			e.printStackTrace();
 		}
 	}
@@ -88,7 +88,7 @@ public abstract class BadRabbit extends JavaPlugin
 		setEnabled(false);
 	}
 
-	protected static Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
+	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
 	{
 		Field field = clazz.getDeclaredField(name);
 		field.setAccessible(true);
