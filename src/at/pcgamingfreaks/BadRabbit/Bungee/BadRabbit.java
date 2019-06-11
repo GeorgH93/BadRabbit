@@ -64,6 +64,14 @@ public abstract class BadRabbit extends Plugin
 		getLogger().warning("[BadRabbit] Failed to enable plugin.");
 	}
 
+	/**
+	 * Gets a field reference from a class.
+	 *
+	 * @param clazz The class containing the field.
+	 * @param name The name of the field.
+	 * @return The field reference. Null if it was not found.
+	 * @throws Exception If the field was not found or could not be modified to be accessible.
+	 */
 	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
 	{
 		Field field = clazz.getDeclaredField(name);
@@ -71,6 +79,15 @@ public abstract class BadRabbit extends Plugin
 		return field;
 	}
 
+	/**
+	 * Gets a method reference from a class.
+	 *
+	 * @param clazz The class containing the method.
+	 * @param name The name of the method.
+	 * @param args The types of the parameters of the method.
+	 * @return The method reference. Null if it was not found.
+	 * @throws Exception If the method was not found or could not be modified to be accessible.
+	 */
 	public static @NotNull Method getMethod(@NotNull Class<?> clazz, @NotNull String name, @Nullable Class<?>... args) throws Exception
 	{
 		Method method = clazz.getDeclaredMethod(name, args);
@@ -78,5 +95,11 @@ public abstract class BadRabbit extends Plugin
 		return method;
 	}
 
+	/**
+	 * Initiate the instance of your plugin here.
+	 *
+	 * @return The instance of the plugin that should be used.
+	 * @throws Exception If there is any problem preventing the init of the plugin instance.
+	 */
 	protected abstract @NotNull Plugin createInstance() throws Exception;
 }

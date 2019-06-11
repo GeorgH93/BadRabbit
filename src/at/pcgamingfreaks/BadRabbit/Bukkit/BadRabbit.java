@@ -88,6 +88,14 @@ public abstract class BadRabbit extends JavaPlugin
 		setEnabled(false);
 	}
 
+	/**
+	 * Gets a field reference from a class.
+	 *
+	 * @param clazz The class containing the field.
+	 * @param name The name of the field.
+	 * @return The field reference. Null if it was not found.
+	 * @throws Exception If the field was not found or could not be modified to be accessible.
+	 */
 	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
 	{
 		Field field = clazz.getDeclaredField(name);
@@ -95,5 +103,11 @@ public abstract class BadRabbit extends JavaPlugin
 		return field;
 	}
 
+	/**
+	 * Initiate the instance of your plugin here.
+	 *
+	 * @return The instance of the plugin that should be used.
+	 * @throws Exception If there is any problem preventing the init of the plugin instance.
+	 */
 	protected abstract @NotNull JavaPlugin createInstance() throws Exception;
 }
