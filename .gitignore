@@ -28,7 +28,9 @@ hs_err_pid*
 *.classpath
 *.project
 *.prefs
-/target/
+*/target/
 /bin/
 *.iml
 /.idea/
+
+*.flattened-pom.xml

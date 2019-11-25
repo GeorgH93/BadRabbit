@@ -13,3 +13,14 @@ public class MyPluginBadRabbit extends BadRabbit {
 ```
 
 If you are looking for a real usage example, you can have a look at the Minepacks plugin [here](https://github.com/GeorgH93/Minepacks/blob/master/src/at/pcgamingfreaks/Minepacks/Bukkit/MinepacksBadRabbit.java).
+
+
+## Build
+### Requirements
+* Java >= 7
+* Maven >= 3.5
+
+### Build it
+```
+mvn clean install
+```
