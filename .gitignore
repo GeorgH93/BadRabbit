@@ -34,3 +34,6 @@ hs_err_pid*
 /.idea/
 
 *.flattened-pom.xml
+
+*.sh
+*.bat
