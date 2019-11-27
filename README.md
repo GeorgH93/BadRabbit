@@ -24,3 +24,7 @@ If you are looking for a real usage example, you can have a look at the Minepack
 ```
 mvn clean install
 ```
+
+
+## Links
+[Javadoc](https://ci.pcgamingfreaks.at/job/BadRabbit/javadoc/)
