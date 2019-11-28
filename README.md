@@ -14,6 +14,30 @@ public class MyPluginBadRabbit extends BadRabbit {
 
 If you are looking for a real usage example, you can have a look at the Minepacks plugin [here](https://github.com/GeorgH93/Minepacks/blob/master/src/at/pcgamingfreaks/Minepacks/Bukkit/MinepacksBadRabbit.java).
 
+## Maven
+### Repository
+```
+<repository>
+	<id>pcgf-repo</id>
+	<url>https://repo.pcgamingfreaks.at/repository/maven-everything</url>
+</repository>
+```
+### Dependency Bukkit
+```
+<dependency>
+    <groupId>at.pcgamingfreaks</groupId>
+    <artifactId>BadRabbit-Bukkit</artifactId>
+    <version>1.4</version>
+</dependency>
+```
+### Dependency BungeeCord
+```
+<dependency>
+    <groupId>at.pcgamingfreaks</groupId>
+    <artifactId>BadRabbit-Bungee</artifactId>
+    <version>1.4</version>
+</dependency>
+```
 
 ## Build
 ### Requirements
