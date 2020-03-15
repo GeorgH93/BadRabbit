@@ -41,8 +41,21 @@ public abstract class BadRabbit extends Plugin
 	{
 		try
 		{
+			boolean old = false;
+			try
+			{
+				Method methodGetClassLoader = getMethod(Class.class, "getClassLoader0");
+				ClassLoader classloader = (ClassLoader) methodGetClassLoader.invoke(getClass());
+				Class<?> plclc = Class.forName("net.md_5.bungee.api.plugin.PluginClassloader");
+				getField(plclc, "plugin").set(classloader, null);
+			}
+			catch(NoSuchFieldException ignored)
+			{ // Old bungee cord
+				old = true;
+			}
+
 			Plugin newPluginInstance = createInstance(); // setup new plugin instance
-			getMethod(Plugin.class, "init", ProxyServer.class, PluginDescription.class).invoke(newPluginInstance, getProxy(), getDescription());
+			if(old) getMethod(Plugin.class, "init", ProxyServer.class, PluginDescription.class).invoke(newPluginInstance, getProxy(), getDescription());
 
 			//region set refs to new plugin instance
 			@SuppressWarnings("unchecked") Map<String, Plugin> plugins = (Map<String, Plugin>) getField(PluginManager.class, "plugins").get(getProxy().getPluginManager());
