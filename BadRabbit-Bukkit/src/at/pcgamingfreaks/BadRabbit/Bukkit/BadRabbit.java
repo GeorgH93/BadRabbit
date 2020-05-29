@@ -73,12 +73,39 @@ public abstract class BadRabbit extends JavaPlugin
 			//endregion
 
 			newPluginInstance.onLoad(); // call load event on new plugin instance
+
+			if(detectPlugMan())
+			{
+				getLogger().warning("[BadRabbit] Please do not load this plugin using PlugMan! Is might cause problems or does not load correctly!");
+				getField(JavaPlugin.class, "isEnabled").set(this, true);
+				Bukkit.getPluginManager().enablePlugin(newPluginInstance);
+			}
 		}
 		catch(Exception e)
 		{
 			getLogger().warning("[BadRabbit] Failed switching to real plugin!");
 			e.printStackTrace();
 		}
+	}
+
+	/**
+	 * Checks if PlugMan has been used to load the plugin.
+	 *
+	 * @return True if PlugMan has been used to lad the plugin.
+	 */
+	private static boolean detectPlugMan()
+	{
+		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
+		boolean plugman = false;
+		for(StackTraceElement stackTraceElement : stackTrace)
+		{
+			if(stackTraceElement.getClassName().contains("com.rylinaux.plugman"))
+			{
+				plugman = true;
+				break;
+			}
+		}
+		return plugman;
 	}
 
 	@Override
