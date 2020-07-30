@@ -66,11 +66,13 @@ public abstract class BadRabbit extends JavaPlugin
 			pluginClassLoaderPlugin.set(getClassLoader(), newPluginInstance);
 			plugins.set(index, newPluginInstance);
 			@SuppressWarnings("unchecked") Map<String, Plugin> lookup = (Map<String, Plugin>) getField(SimplePluginManager.class, "lookupNames").get(spm);
-			String serverVersion = Bukkit.getServer().getVersion().toLowerCase(Locale.ROOT);
-			if(serverVersion.contains("paper") || serverVersion.contains("tuinity") || serverVersion.contains("empirecraft"))
-				lookup.put(getDescription().getName().toLowerCase(Locale.ENGLISH), newPluginInstance);
-			else
-				lookup.put(getDescription().getName(), newPluginInstance);
+			lookup.replace(getDescription().getName(), this, newPluginInstance);
+			lookup.replace(getDescription().getName().toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
+			for(String provides : getDescription().getProvides())
+			{
+				lookup.replace(provides, this, newPluginInstance);
+				lookup.replace(provides.toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
+			}
 			//endregion
 
 			newPluginInstance.onLoad(); // call load event on new plugin instance
