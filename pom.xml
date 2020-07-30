@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>1.6</revision>
+		<revision>1.7</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -37,10 +37,6 @@
 		</license>
 	</licenses>
 	<repositories>
-		<!--<repository>
-			<id>pcgf-repo</id>
-			<url>https://repo.pcgamingfreaks.at/repository/maven-everything/</url>
-		</repository>-->
 		<repository>
 			<id>spigot-nexus</id>
 			<url>https://hub.spigotmc.org/nexus/content/groups/public/</url>
