@@ -68,11 +68,16 @@ public abstract class BadRabbit extends JavaPlugin
 			@SuppressWarnings("unchecked") Map<String, Plugin> lookup = (Map<String, Plugin>) getField(SimplePluginManager.class, "lookupNames").get(spm);
 			lookup.replace(getDescription().getName(), this, newPluginInstance);
 			lookup.replace(getDescription().getName().toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
-			for(String provides : getDescription().getProvides())
+			try
 			{
-				lookup.replace(provides, this, newPluginInstance);
-				lookup.replace(provides.toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
+				getDescription().getClass().getMethod("getProvides");
+				for(String provides : getDescription().getProvides())
+				{
+					lookup.replace(provides, this, newPluginInstance);
+					lookup.replace(provides.toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
+				}
 			}
+			catch(NoSuchMethodException ignored) {} // the plugin description does not implement the getProvides method (old server versions)
 			//endregion
 
 			newPluginInstance.onLoad(); // call load event on new plugin instance

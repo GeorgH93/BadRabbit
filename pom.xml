@@ -7,7 +7,7 @@
 	<packaging>pom</packaging>
 
 	<properties>
-		<revision>1.8</revision>
+		<revision>1.9</revision>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 	</properties>
@@ -112,7 +112,6 @@
 						<mailingLists/>
 						<issueManagement/>
 						<repositories/>
-						<!--<pluginRepositories/><distributionManagement/>-->
 					</pomElements>
 				</configuration>
 				<executions>
