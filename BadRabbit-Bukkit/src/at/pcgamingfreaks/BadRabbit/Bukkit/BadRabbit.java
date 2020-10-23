@@ -29,7 +29,7 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.ArrayList;
+import java.util.List;
 import java.util.Locale;
 import java.util.Map;
 
@@ -56,7 +56,7 @@ public abstract class BadRabbit extends JavaPlugin
 			//region unregister plugin
 			pluginClassLoaderPlugin.set(getClassLoader(), null); // set the plugin to null in the class loader
 			getField(pluginClassLoader, "pluginInit").set(getClassLoader(), null); // set the plugin init to null in the class loader
-			@SuppressWarnings("unchecked") ArrayList<Plugin> plugins = (ArrayList<Plugin>) getField(SimplePluginManager.class, "plugins").get(spm);
+			@SuppressWarnings("unchecked") List<Plugin> plugins = (List<Plugin>) getField(SimplePluginManager.class, "plugins").get(spm);
 			int index = plugins.indexOf(this);
 			//endregion
 
