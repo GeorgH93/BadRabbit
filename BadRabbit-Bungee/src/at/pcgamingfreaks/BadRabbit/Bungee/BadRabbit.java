@@ -36,6 +36,20 @@ import java.util.Map;
 
 public abstract class BadRabbit extends Plugin
 {
+	private static int getJavaVersion() {
+		String version = System.getProperty("java.version");
+		if(version.startsWith("1."))
+		{
+			version = version.substring(2, 3);
+		}
+		else
+		{
+			int dot = version.indexOf(".");
+			if(dot != -1) { version = version.substring(0, dot); }
+		}
+		return Integer.parseInt(version);
+	}
+
 	@Override
 	public void onLoad()
 	{
@@ -44,10 +58,19 @@ public abstract class BadRabbit extends Plugin
 			boolean old = false;
 			try
 			{
-				Method methodGetClassLoader = getMethod(Class.class, "getClassLoader0");
-				ClassLoader classloader = (ClassLoader) methodGetClassLoader.invoke(getClass());
+				ClassLoader classLoader;
+				if(getJavaVersion() >= 16)
+				{ // Might not always work, therefore we only use it on java 16 and up
+					classLoader = getClass().getClassLoader();
+				}
+				else
+				{
+					Method methodGetClassLoader = getMethod(Class.class, "getClassLoader0");
+					classLoader = (ClassLoader) methodGetClassLoader.invoke(getClass());
+				}
+
 				Class<?> plclc = Class.forName("net.md_5.bungee.api.plugin.PluginClassloader");
-				getField(plclc, "plugin").set(classloader, null);
+				getField(plclc, "plugin").set(classLoader, null);
 			}
 			catch(NoSuchFieldException ignored)
 			{ // Old bungee cord
