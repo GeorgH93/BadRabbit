@@ -29,12 +29,13 @@ import org.bukkit.plugin.java.JavaPlugin;
 import org.jetbrains.annotations.NotNull;
 
 import java.lang.reflect.Field;
-import java.util.List;
-import java.util.Locale;
-import java.util.Map;
+import java.util.*;
+import java.util.logging.Level;
 
 public abstract class BadRabbit extends JavaPlugin
 {
+	private JavaPlugin newPluginInstance = null;
+
 	@Override
 	public void onLoad()
 	{
@@ -46,54 +47,97 @@ public abstract class BadRabbit extends JavaPlugin
 				return;
 			}
 
+			if(detectPluginManager())
+			{
+				getLogger().severe("[BadRabbit] Please do not load this plugin using PluginManager! It might cause problems or does not load correctly!");
+			}
+
 			//region init reflection variables
 			final Class<?> pluginClassLoader = Class.forName("org.bukkit.plugin.java.PluginClassLoader");
-			final Field pluginClassLoaderPlugin = getField(pluginClassLoader, "plugin");
+			final Field fieldPluginClassLoaderPlugin = getField(pluginClassLoader, "plugin");
 			//endregion
-
-			final SimplePluginManager spm = (SimplePluginManager) Bukkit.getPluginManager();
 
 			//region unregister plugin
-			pluginClassLoaderPlugin.set(getClassLoader(), null); // set the plugin to null in the class loader
+			fieldPluginClassLoaderPlugin.set(getClassLoader(), null); // set the plugin to null in the class loader
 			getField(pluginClassLoader, "pluginInit").set(getClassLoader(), null); // set the plugin init to null in the class loader
-			@SuppressWarnings("unchecked") List<Plugin> plugins = (List<Plugin>) getField(SimplePluginManager.class, "plugins").get(spm);
-			int index = plugins.indexOf(this);
 			//endregion
 
-			JavaPlugin newPluginInstance = createInstance(); // setup new plugin instance
+			newPluginInstance = createInstance(); // setup new plugin instance
 
 			//region set refs to new plugin instance
-			pluginClassLoaderPlugin.set(getClassLoader(), newPluginInstance);
-			plugins.set(index, newPluginInstance);
-			@SuppressWarnings("unchecked") Map<String, Plugin> lookup = (Map<String, Plugin>) getField(SimplePluginManager.class, "lookupNames").get(spm);
-			lookup.replace(getDescription().getName(), this, newPluginInstance);
-			lookup.replace(getDescription().getName().toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
-			try
-			{
-				getDescription().getClass().getMethod("getProvides");
-				for(String provides : getDescription().getProvides())
-				{
-					lookup.replace(provides, this, newPluginInstance);
-					lookup.replace(provides.toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
-				}
-			}
-			catch(NoSuchMethodException ignored) {} // the plugin description does not implement the getProvides method (old server versions)
+			fieldPluginClassLoaderPlugin.set(getClassLoader(), newPluginInstance);
+			replaceSelfInPluginList(newPluginInstance);
 			//endregion
 
 			newPluginInstance.onLoad(); // call load event on new plugin instance
 
 			if(detectPlugMan())
 			{
-				getLogger().warning("[BadRabbit] Please do not load this plugin using PlugMan! Is might cause problems or does not load correctly!");
+				getLogger().warning("[BadRabbit] Please do not load this plugin using PlugMan! It might cause problems or does not load correctly!");
 				getField(JavaPlugin.class, "isEnabled").set(this, true);
 				Bukkit.getPluginManager().enablePlugin(newPluginInstance);
 			}
 		}
 		catch(Exception e)
 		{
-			getLogger().warning("[BadRabbit] Failed switching to real plugin!");
-			e.printStackTrace();
+			getLogger().log(Level.SEVERE, "[BadRabbit] Failed switching to real plugin!", e);
 		}
+	}
+
+	private void replaceSelfInPluginList(Plugin newPluginInstance) throws Exception
+	{
+		@SuppressWarnings("unchecked") List<Plugin> plugins = (List<Plugin>) getField(SimplePluginManager.class, "plugins").get(Bukkit.getPluginManager());
+		int index = plugins.indexOf(this);
+		if(index == -1)
+		{
+			if(detectPluginManager())
+			{
+				plugins.add(newPluginInstance);
+			}
+		}
+		else
+		{
+			plugins.set(index, newPluginInstance);
+		}
+		if(detectPluginManager())
+		{
+			int countCurrent = 0, countNew = 0;
+			Iterator<Plugin> pluginsIterator = plugins.listIterator();
+			while(pluginsIterator.hasNext())
+			{
+				Plugin plugin = pluginsIterator.next();
+				if(plugin.equals(this))
+				{
+					countCurrent++;
+					pluginsIterator.remove();
+				}
+				else if(plugin.equals(newPluginInstance))
+				{
+					countNew++;
+					if(countNew > 1)
+					{
+						pluginsIterator.remove();
+					}
+				}
+			}
+			if(countNew < 1)
+			{
+				plugins.add(newPluginInstance);
+			}
+		}
+		@SuppressWarnings("unchecked") Map<String, Plugin> lookup = (Map<String, Plugin>) getField(SimplePluginManager.class, "lookupNames").get(Bukkit.getPluginManager());
+		lookup.replace(getDescription().getName(), this, newPluginInstance);
+		lookup.replace(getDescription().getName().toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
+		try
+		{
+			getDescription().getClass().getMethod("getProvides");
+			for(String provides : getDescription().getProvides())
+			{
+				lookup.replace(provides, this, newPluginInstance);
+				lookup.replace(provides.toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
+			}
+		}
+		catch(NoSuchMethodException ignored) {} // the plugin description does not implement the getProvides method (old server versions)
 	}
 
 	/**
@@ -103,24 +147,50 @@ public abstract class BadRabbit extends JavaPlugin
 	 */
 	private static boolean detectPlugMan()
 	{
+		return doesCallstackContain("com.rylinaux.plugman");
+	}
+
+	private static boolean detectPluginManager()
+	{
+		return doesCallstackContain("net.lenni0451.spm");
+	}
+
+	private static boolean doesCallstackContain(String searchFor)
+	{
 		StackTraceElement[] stackTrace = new Throwable().getStackTrace();
-		boolean plugman = false;
 		for(StackTraceElement stackTraceElement : stackTrace)
 		{
-			if(stackTraceElement.getClassName().contains("com.rylinaux.plugman"))
+			if(stackTraceElement.getClassName().contains(searchFor))
 			{
-				plugman = true;
-				break;
+				return true;
 			}
 		}
-		return plugman;
+		return false;
 	}
 
 	@Override
 	public void onEnable()
 	{
-		getLogger().warning("[BadRabbit] Failed to enable plugin.");
-		setEnabled(false);
+		if(detectPluginManager())
+		{
+			getLogger().severe("[BadRabbit] Please do not load/enable this plugin using PluginManager! It might cause problems or does not load correctly!");
+			try
+			{
+				replaceSelfInPluginList(newPluginInstance);
+				Bukkit.getPluginManager().enablePlugin(newPluginInstance);
+				getLogger().severe("[BadRabbit] Plugin enabled with PluginManager! API will most likely not be available!!!");
+			}
+			catch(Exception e)
+			{
+				getLogger().log(Level.SEVERE, "[BadRabbit] Failed to enable plugin!", e);
+				setEnabled(false);
+			}
+		}
+		else
+		{
+			getLogger().warning("[BadRabbit] Failed to enable plugin.");
+			setEnabled(false);
+		}
 	}
 
 	/**
