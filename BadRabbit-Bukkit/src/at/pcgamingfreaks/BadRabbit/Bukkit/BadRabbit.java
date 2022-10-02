@@ -101,14 +101,13 @@ public abstract class BadRabbit extends JavaPlugin
 		}
 		if(detectPluginManager())
 		{
-			int countCurrent = 0, countNew = 0;
+			int countNew = 0;
 			Iterator<Plugin> pluginsIterator = plugins.listIterator();
 			while(pluginsIterator.hasNext())
 			{
 				Plugin plugin = pluginsIterator.next();
 				if(plugin.equals(this))
 				{
-					countCurrent++;
 					pluginsIterator.remove();
 				}
 				else if(plugin.equals(newPluginInstance))
