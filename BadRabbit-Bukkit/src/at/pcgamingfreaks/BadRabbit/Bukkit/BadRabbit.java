@@ -136,7 +136,10 @@ public abstract class BadRabbit extends JavaPlugin
 				lookup.replace(provides.toLowerCase(Locale.ENGLISH), this, newPluginInstance); // Paper and forks
 			}
 		}
-		catch(NoSuchMethodException ignored) {} // the plugin description does not implement the getProvides method (old server versions)
+		catch(NoSuchMethodException ignored)
+		{
+			// the plugin description does not implement the getProvides method (old server versions)
+		}
 	}
 
 	/**
