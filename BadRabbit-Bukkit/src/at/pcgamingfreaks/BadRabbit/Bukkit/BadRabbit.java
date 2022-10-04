@@ -201,9 +201,10 @@ public abstract class BadRabbit extends JavaPlugin
 	 * @param clazz The class containing the field.
 	 * @param name The name of the field.
 	 * @return The field reference. Null if it was not found.
-	 * @throws Exception If the field was not found or could not be modified to be accessible.
+	 * @throws NoSuchFieldException If the field was not found
+	 * @throws SecurityException If the field could not be modified to be accessible.
 	 */
-	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
+	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws NoSuchFieldException, SecurityException
 	{
 		Field field = clazz.getDeclaredField(name);
 		field.setAccessible(true);
