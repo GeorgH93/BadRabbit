@@ -106,9 +106,10 @@ public abstract class BadRabbit extends Plugin
 	 * @param clazz The class containing the field.
 	 * @param name The name of the field.
 	 * @return The field reference. Null if it was not found.
-	 * @throws Exception If the field was not found or could not be modified to be accessible.
+	 * @throws NoSuchFieldException If the field was not found
+	 * @throws SecurityException If the field could not be modified to be accessible.
 	 */
-	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws Exception
+	protected static @NotNull Field getField(@NotNull Class<?> clazz, @NotNull String name) throws NoSuchFieldException, SecurityException
 	{
 		Field field = clazz.getDeclaredField(name);
 		field.setAccessible(true);
@@ -122,9 +123,11 @@ public abstract class BadRabbit extends Plugin
 	 * @param name The name of the method.
 	 * @param args The types of the parameters of the method.
 	 * @return The method reference. Null if it was not found.
-	 * @throws Exception If the method was not found or could not be modified to be accessible.
+	 * @throws NoSuchMethodException If the method was not found.
+	 * @throws NullPointerException If the given class was null.
+	 * @throws SecurityException If the method could not be modified to be accessible.
 	 */
-	public static @NotNull Method getMethod(@NotNull Class<?> clazz, @NotNull String name, @Nullable Class<?>... args) throws Exception
+	public static @NotNull Method getMethod(@NotNull Class<?> clazz, @NotNull String name, @Nullable Class<?>... args) throws NoSuchMethodException, NullPointerException, SecurityException
 	{
 		Method method = clazz.getDeclaredMethod(name, args);
 		method.setAccessible(true);
