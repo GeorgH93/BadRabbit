@@ -33,6 +33,7 @@ import org.jetbrains.annotations.Nullable;
 import java.lang.reflect.Field;
 import java.lang.reflect.Method;
 import java.util.Map;
+import java.util.logging.Level;
 
 public abstract class BadRabbit extends Plugin
 {
@@ -89,8 +90,7 @@ public abstract class BadRabbit extends Plugin
 		}
 		catch(Exception e)
 		{
-			getLogger().warning("[BadRabbit] Failed switching to real plugin!");
-			e.printStackTrace();
+			getLogger().log(Level.SEVERE, "[BadRabbit] Failed switching to real plugin!", e);
 		}
 	}
 
