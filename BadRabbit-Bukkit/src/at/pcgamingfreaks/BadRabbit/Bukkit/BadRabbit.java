@@ -84,6 +84,32 @@ public abstract class BadRabbit extends JavaPlugin
 		}
 	}
 
+	private void handlePluginManager(List<Plugin> plugins)
+	{
+		int countNew = 0;
+		Iterator<Plugin> pluginsIterator = plugins.listIterator();
+		while(pluginsIterator.hasNext())
+		{
+			Plugin plugin = pluginsIterator.next();
+			if(plugin.equals(this))
+			{
+				pluginsIterator.remove();
+			}
+			else if(plugin.equals(newPluginInstance))
+			{
+				countNew++;
+				if(countNew > 1)
+				{
+					pluginsIterator.remove();
+				}
+			}
+		}
+		if(countNew < 1)
+		{
+			plugins.add(newPluginInstance);
+		}
+	}
+
 	private void replaceSelfInPluginList(Plugin newPluginInstance) throws Exception
 	{
 		@SuppressWarnings("unchecked") List<Plugin> plugins = (List<Plugin>) getField(SimplePluginManager.class, "plugins").get(Bukkit.getPluginManager());
@@ -101,28 +127,7 @@ public abstract class BadRabbit extends JavaPlugin
 		}
 		if(detectPluginManager())
 		{
-			int countNew = 0;
-			Iterator<Plugin> pluginsIterator = plugins.listIterator();
-			while(pluginsIterator.hasNext())
-			{
-				Plugin plugin = pluginsIterator.next();
-				if(plugin.equals(this))
-				{
-					pluginsIterator.remove();
-				}
-				else if(plugin.equals(newPluginInstance))
-				{
-					countNew++;
-					if(countNew > 1)
-					{
-						pluginsIterator.remove();
-					}
-				}
-			}
-			if(countNew < 1)
-			{
-				plugins.add(newPluginInstance);
-			}
+			handlePluginManager(plugins);
 		}
 		@SuppressWarnings("unchecked") Map<String, Plugin> lookup = (Map<String, Plugin>) getField(SimplePluginManager.class, "lookupNames").get(Bukkit.getPluginManager());
 		lookup.replace(getDescription().getName(), this, newPluginInstance);
