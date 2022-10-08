@@ -110,7 +110,7 @@ public abstract class BadRabbit extends JavaPlugin
 		}
 	}
 
-	private void replaceSelfInPluginList(Plugin newPluginInstance) throws Exception
+	private void replaceSelfInPluginList(Plugin newPluginInstance) throws NoSuchFieldException, IllegalAccessException, SecurityException
 	{
 		@SuppressWarnings("unchecked") List<Plugin> plugins = (List<Plugin>) getField(SimplePluginManager.class, "plugins").get(Bukkit.getPluginManager());
 		int index = plugins.indexOf(this);
