@@ -195,7 +195,7 @@ public abstract class BadRabbit extends JavaPlugin
 		}
 		else
 		{
-			getLogger().warning("[BadRabbit] Failed to enable plugin.");
+			getLogger().log(Level.SEVERE, "[BadRabbit] Failed to enable plugin.");
 			setEnabled(false);
 		}
 	}

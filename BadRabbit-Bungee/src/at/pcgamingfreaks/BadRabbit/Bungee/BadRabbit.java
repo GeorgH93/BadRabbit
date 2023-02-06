@@ -97,7 +97,7 @@ public abstract class BadRabbit extends Plugin
 	@Override
 	public void onEnable()
 	{
-		getLogger().warning("[BadRabbit] Failed to enable plugin.");
+		getLogger().log(Level.SEVERE, "[BadRabbit] Failed to enable plugin.");
 	}
 
 	/**
